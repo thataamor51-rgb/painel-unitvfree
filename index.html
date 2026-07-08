@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Escolha seu Painel</title>
+    <style>
+        body { background: #0a0a0a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { display: flex; gap: 20px; }
+        .card { background: #1a1a1a; padding: 30px; border-radius: 15px; border: 2px solid #333; text-align: center; width: 300px; transition: 0.3s; }
+        .card:hover { border-color: #ff0055; }
+        h2 { margin-bottom: 20px; }
+        .btn { display: block; margin-top: 20px; padding: 10px; background: #ff0055; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>ESCOLHA O PAINEL QUE DESEJA ACESSAR</h1>
+    <div class="container">
+        <div class="card">
+            <h2>ADMINISTRATIVO</h2>
+            <p>Acesso restrito</p>
+            <a href="admin_login.html" class="btn">ACESSAR PAINEL</a>
+        </div>
+        <div class="card">
+            <h2>REVENDEDOR</h2>
+            <p>Área exclusiva</p>
+            <a href="Revendedor.html" class="btn">ACESSAR REVENDEDOR</a>
+        </div>
+    </div>
+</body>
+</html>
