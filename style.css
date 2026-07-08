@@ -1,0 +1,261 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+background:linear-gradient(180deg,#2a004d,#130020,#000);
+color:white;
+min-height:100vh;
+
+}
+
+/* Fundo */
+
+.fundo{
+
+position:fixed;
+width:100%;
+height:100%;
+background:url("img/fundo.jpg") center center;
+background-size:cover;
+opacity:.18;
+z-index:-1;
+
+}
+
+/* Logo */
+
+.logo{
+
+text-align:center;
+font-size:32px;
+font-weight:bold;
+color:#9f5cff;
+margin-bottom:25px;
+
+}
+
+/* Login */
+
+.login{
+
+width:370px;
+margin:70px auto;
+background:white;
+padding:30px;
+border-radius:20px;
+color:#222;
+box-shadow:0 0 25px rgba(0,0,0,.4);
+
+}
+
+.login h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+.login input{
+
+width:100%;
+padding:14px;
+margin-top:12px;
+border-radius:10px;
+border:1px solid #ccc;
+outline:none;
+
+}
+
+.login input:focus{
+
+border:1px solid #8b5cf6;
+
+}
+
+.login button{
+
+width:100%;
+padding:14px;
+margin-top:20px;
+background:#ff004d;
+border:none;
+color:white;
+font-size:17px;
+font-weight:bold;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+.login button:hover{
+
+background:#d80042;
+
+}
+
+/* Sidebar */
+
+.sidebar{
+
+position:fixed;
+left:0;
+top:0;
+width:240px;
+height:100%;
+background:#1c0033;
+padding:20px;
+
+}
+
+.sidebar a{
+
+display:block;
+padding:13px;
+margin-top:8px;
+color:white;
+text-decoration:none;
+border-radius:10px;
+transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+background:#7c3aed;
+
+}
+
+/* Conteúdo */
+
+.main{
+
+margin-left:260px;
+padding:30px;
+
+}
+
+/* Cards */
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:25px;
+
+}
+
+.card{
+
+background:#260043;
+padding:22px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,0,0,.2);
+
+}
+
+.numero{
+
+font-size:34px;
+font-weight:bold;
+color:#8b5cf6;
+margin-top:10px;
+
+}
+
+/* Botões */
+
+.btn{
+
+background:#ff004d;
+padding:12px 22px;
+border-radius:10px;
+color:white;
+font-weight:bold;
+border:none;
+cursor:pointer;
+transition:.3s;
+
+}
+
+.btn:hover{
+
+background:#c7003d;
+
+}
+
+/* Tabela */
+
+table{
+
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+
+}
+
+th{
+
+background:#3d006d;
+
+}
+
+th,td{
+
+padding:14px;
+border-bottom:1px solid #444;
+
+}
+
+/* Status */
+
+.ativo{
+
+color:#00ff80;
+font-weight:bold;
+
+}
+
+.vencido{
+
+color:red;
+font-weight:bold;
+
+}
+
+/* Responsivo */
+
+@media(max-width:900px){
+
+.sidebar{
+
+position:relative;
+width:100%;
+height:auto;
+
+}
+
+.main{
+
+margin-left:0;
+
+}
+
+.cards{
+
+grid-template-columns:1fr;
+
+}
+
+.login{
+
+width:92%;
+
+}
+
+}
