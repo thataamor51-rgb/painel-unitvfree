@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>UnitvFree - Painel</title>
+    <style>
+     body { 
+    background: linear-gradient(135deg, #0000FF, #800080); /* Azul e Roxo */
+    min-height: 100vh; 
+    margin: 0; 
+    display: flex; /* Essencial para alinhar barra e conteúdo lado a lado */
+    flex-direction: row; 
+    color: white; 
+    font-family: Arial, sans-serif; 
+}
+
+.sidebar { 
+    width: 280px; 
+    background: rgba(0, 0, 0, 0.3); 
+    padding: 20px; 
+    height: 100vh; 
+    box-sizing: border-box; 
+    flex-shrink: 0; /* Garante que a barra não encolha */
+}
+
+.content { 
+    flex: 1; /* Faz o conteúdo ocupar todo o espaço restante */
+    padding: 40px; 
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for grande */
+}
+    </style>
+</head>
+<body>
+,</div> class="sidebar">
+    <h2>UnitvFree</h2>
+    <button onclick="render('dashboard')">Dashboard</button>
+    <hr>
+    <button onclick="render('criar_admin')">Criar Admin</button>
+    <button onclick="render('lista_admin')">Lista de Admins</button>
+    <hr>
+    <button onclick="render('criar_revendedor')">Criar Revendedor</button>
+    <button onclick="render('lista_revendedor')">Lista de Revendedores</button>
+    <hr>
+    <button onclick="render('planos')">Planos</button>
+    <button onclick="render('excluidos')">Excluídos</button>
+    <hr>
+    <button onclick="render('configuracao')">Configuração</button>
+    <button onclick="render('gerador')">Gerador de Códigos</button>
+</div> <div class="content" id="conteudo">
+    <h1>Bem-vindo ao Painel</h1>
+</div>
+
+<script>
+    // --- FUNÇÃO CENTRAL DE NAVEGAÇÃO ---
+    function render(secao) {
+        let c = document.getElementById('conteudo');
+        
+        if(secao === 'dashboard') {
+            c.innerHTML = "<h1>Dashboard</h1><p>Visão geral do sistema.</p>";
+        } 
+        else if(secao === 'configuracao') {
+            c.innerHTML = `<h1>Configuração</h1>
+            <div class='card'>
+                <h3>Upload Múltiplo</h3>
+                <label>Nome da Pasta:</label><input type='text' id='cfg_nome'>
+                <label>Arquivos .config:</label><input type='file' id='cfg_files' multiple accept='.config'>
+                <button class='btn-acao' onclick='processarUploads()'>Salvar e Gerar Códigos</button>
+            </div>`;
+        } 
+        else if(secao === 'gerador') {
+            c.innerHTML = `<h1>Códigos Gerados</h1><div id='lista_codigos'></div>`;
+            listarCodigosNoGerador();
+        }
+    }
+
+    // --- LÓGICA DE PROCESSAMENTO ---
+    function processarUploads() {
+        const input = document.getElementById('cfg_files');
+        const pasta = document.getElementById('cfg_nome').value;
+        if(!pasta || input.files.length === 0) return alert("Preencha o nome e selecione arquivos!");
+
+        let lista = JSON.parse(localStorage.getItem('codigos_gerados') || '[]');
+
+        for (let i = 0; i < input.files.length; i++) {
+            let codigo = Math.floor(10000000000 + Math.random() * 90000000000).toString();
+            lista.push({
+                codigo: codigo,
+                arquivo: input.files[i].name,
+                pasta: pasta,
+                data: new Date().toLocaleDateString()
+            });
+        }
+        localStorage.setItem('codigos_gerados', JSON.stringify(lista));
+        alert(input.files.length + " arquivos processados!");
+        render('gerador'); // Atualiza a tela
+    }
+
+    function listarCodigosNoGerador() {
+        let lista = JSON.parse(localStorage.getItem('codigos_gerados') || '[]');
+        let html = "<table><tr><th>Código (11 dígitos)</th><th>Arquivo</th><th>Pasta</th></tr>";
+        lista.forEach(item => {
+            html += `<tr><td><strong>${item.codigo}</strong></td><td>${item.arquivo}</td><td>${item.pasta}</td></tr>`;
+        });
+        document.getElementById('lista_codigos').innerHTML = html + "</table>";
+    }
+</script>
+</body>
+</html>
