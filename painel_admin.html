@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>UnitvFree - Painel</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #0000FF, #800080);
+            min-height: 100vh; 
+            margin: 0; 
+            display: flex; 
+            color: white; 
+            font-family: Arial, sans-serif; 
+        }
+        .sidebar { background-color: #0f1025; width: 250px; padding: 20px; display: flex; flex-direction: column; }
+        .menu-item { padding: 15px; margin-bottom: 10px; border-radius: 12px; color: white; text-decoration: none; transition: background 0.3s; cursor: pointer; display: block; }
+        .menu-item.active { background: linear-gradient(90deg, #1e3c72 0%, #a82020 100%); }
+        .menu-item:hover { background-color: #2e2e4e; }
+        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; color: white; }
+        th, td { border: 1px solid #444; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 style="text-align: center;">UnitvFree</h2>
+    <a href="#" class="menu-item" onclick="render('dashboard', this)">Dashboard</a>
+    <a href="#" class="menu-item" onclick="render('criar_admin', this)">Criar Admin</a>
+    <a href="#" class="menu-item" onclick="render('lista_admin', this)">Lista de Admins</a>
+    <a href="#" class="menu-item" onclick="render('criar_revendedor', this)">Criar Revendedor</a>
+    <a href="#" class="menu-item" onclick="render('lista_revendedor', this)">Lista de Revendedores</a>
+    <a href="#" class="menu-item" onclick="render('gerador', this)">Gerador de Códigos</a>
+    <a href="#" class="menu-item" onclick="render('configuracao', this)">Configuração</a>
+</div>
+
+<div class="content" id="conteudo">
+    <h1>Bem-vindo ao Painel</h1>
+</div>
+
+<script>
+    // Função para salvar novo admin
+    function salvarAdmin() {
+        const user = document.getElementById('admin_user').value;
+        const pass = document.getElementById('admin_pass').value;
+        if (!user || !pass) return alert("Preencha usuário e senha!");
+
+        let lista = JSON.parse(localStorage.getItem('lista_admins') || '[]');
+        lista.push({ usuario: user, senha: pass, tipo: 'admin' });
+        localStorage.setItem('lista_admins', JSON.stringify(lista));
+        alert("Administrador criado com sucesso!");
+        render('lista_admin');
+    }
+
+    // Navegação entre seções
+    function render(secao, elemento) {
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        if(elemento) elemento.classList.add('active');
+
+        let c = document.getElementById('conteudo');
+        
+        if(secao === 'dashboard') {
+            c.innerHTML = "<h1>Dashboard</h1><p>Visão geral do sistema.</p>";
+        } else if(secao === 'criar_admin') {
+            c.innerHTML = `<h1>Criar Administrador</h1>
+            <input type='text' id='admin_user' placeholder='Usuário'><br><br>
+            <input type='password' id='admin_pass' placeholder='Senha'><br><br>
+            <button onclick='salvarAdmin()'>Salvar Administrador</button>`;
+        } else if(secao === 'lista_admin') {
+            let lista = JSON.parse(localStorage.getItem('lista_admins') || '[]');
+            let html = "<h1>Lista de Admins</h1><table><tr><th>Usuário</th><th>Senha</th></tr>";
+            lista.forEach(item => {
+                html += `<tr><td>${item.usuario}</td><td>${item.senha}</td></tr>`;
+            });
+            c.innerHTML = html + "</table>";
+        } else if(secao === 'lista_revendedor') {
+            let lista = JSON.parse(localStorage.getItem('lista_revendedores') || '[]');
+            let html = "<h1>Usuários Cadastrados</h1><table><tr><th>Usuário</th><th>Tipo</th></tr>";
+            lista.forEach(item => {
+                html += `<tr><td>${item.usuario}</td><td>${item.tipo}</td></tr>`;
+            });
+            c.innerHTML = html + "</table>";
+        } else if(secao === 'gerador') {
+            c.innerHTML = `<h1>Códigos Gerados</h1><div id='lista_codigos'></div>`;
+            listarCodigosNoGerador();
+        } else if(secao === 'configuracao') {
+            c.innerHTML = `<h1>Configuração</h1>
+            <button onclick='processarUploads()'>Salvar e Gerar Códigos</button>`;
+        }
+    }
+
+    function listarCodigosNoGerador() {
+        let lista = JSON.parse(localStorage.getItem('codigos_gerados') || '[]');
+        let html = "<table><tr><th>Código</th><th>Arquivo</th><th>Pasta</th></tr>";
+        lista.forEach(item => {
+            html += `<tr><td>${item.codigo}</td><td>${item.arquivo}</td><td>${item.pasta}</td></tr>`;
+        });
+        document.getElementById('lista_codigos').innerHTML = html + "</table>";
+    }
+</script>
+</body>
+</html>
