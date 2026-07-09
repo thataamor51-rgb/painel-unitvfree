@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>UnitvFree - Painel</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #0000FF, #800080);
+            min-height: 100vh; 
+            margin: 0; 
+            display: flex; 
+            color: white; 
+            font-family: Arial, sans-serif; 
+        }
+        .sidebar { background-color: #0f1025; width: 250px; padding: 20px; display: flex; flex-direction: column; }
+        .menu-item { padding: 15px; margin-bottom: 10px; border-radius: 12px; color: white; text-decoration: none; transition: background 0.3s; cursor: pointer; display: block; }
+        .menu-item.active { background: linear-gradient(90deg, #1e3c72 0%, #a82020 100%); }
+        .menu-item:hover { background-color: #2e2e4e; }
+        .btn-sair { background: #5a0d0d; text-align: center; margin-top: auto; }  
+        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; color: white; }
+        th, td { border: 1px solid #444; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 style="text-align: center;">UnitvFree</h2>
+    <a href="#" class="menu-item" onclick="render('dashboard', this)">Dashboard</a>
+    <a href="#" class="menu-item" onclick="render('criar_admin', this)">Criar Admin</a>
+    <a href="#" class="menu-item" onclick="render('lista_admin', this)">Lista de Admins</a>
+    <a href="#" class="menu-item" onclick="render('criar_revendedor', this)">Criar Revendedor</a>
+    <a href="#" class="menu-item" onclick="render('lista_revendedor', this)">Lista de Revendedores</a>
+    <a href="#" class="menu-item" onclick="render('gerador', this)">Gerador de Códigos</a>
+    <a href="#" class="menu-item" onclick="render('configuracao', this)">Configuração</a>
+    <a href="#" class="menu-item btn-sair" onclick="sair()">Sair do Painel</a>
+</div>
+
+<div class="content" id="conteudo">
+    <h1>Bem-vindo ao Painel</h1>
+</div>
+
+<script>
+    // --- SEGURANÇA E SAÍDA ---
+    window.onload = () => {
+        if (!localStorage.getItem('usuario_logado')) window.location.href = "login.html";
+    };
+
+    function sair() {
+        localStorage.removeItem('usuario_logado');
+        window.location.href = "login.html";
+    }
+
+    // --- CRIAÇÃO DE USUÁRIOS ---
+    function salvarUsuario(tipo) {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        if (!user || !pass) return alert("Preencha todos os campos!");
+
+        const chave = (tipo === 'admin') ? 'lista_admins' : 'lista_revendedores';
+        let lista = JSON.parse(localStorage.getItem(chave) || '[]');
+        lista.push({ usuario: user, senha: pass, tipo: tipo });
+        localStorage.setItem(chave, JSON.stringify(lista));
+        alert(tipo.toUpperCase() + " criado com sucesso!");
+        render(tipo === 'admin' ? 'lista_admin' : 'lista_revendedor');
+    }
+
+    // --- RENDERIZAÇÃO ---
+    function render(secao, elemento) {
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        if(elemento) elemento.classList.add('active');
+
+        let c = document.getElementById('conteudo');
+        
+        if(secao === 'dashboard') {
+            c.innerHTML = "<h1>Dashboard</h1><p>Visão geral do sistema.</p>";
+        } 
+        else if(secao === 'criar_admin' || secao === 'criar_revendedor') {
+            const tipo = secao === 'criar_admin' ? 'admin' : 'revendedor';
+            c.innerHTML = `<h1>Criar ${tipo.toUpperCase()}</h1>
+            <input type='text' id='user' placeholder='Usuário'><br><br>
+            <input type='password' id='pass' placeholder='Senha'><br><br>
+            <button onclick="salvarUsuario('${tipo}')">Salvar ${tipo.toUpperCase()}</button>`;
+        } 
+        else if(secao === 'lista_admin' || secao === 'lista_revendedor') {
+            const chave = (secao === 'lista_admin') ? 'lista_admins' : 'lista_revendedores';
+            let lista = JSON.parse(localStorage.getItem(chave) || '[]');
+            let html = `<h1>Lista de ${secao.replace('lista_', '')}</h1><table><tr><th>Usuário</th><th>Senha</th></tr>`;
+            lista.forEach(item => {
+                html += `<tr><td>${item.usuario}</td><td>${item.senha}</td></tr>`;
+            });
+            c.innerHTML = html + "</table>";
+        } 
+        else if(secao === 'gerador') {
+            c.innerHTML = `<h1>Códigos Gerados</h1><div id='lista_codigos'></div>`;
+            listarCodigosNoGerador();
+        } 
+        else if(secao === 'configuracao') {
+            c.innerHTML = `<h1>Configuração</h1><button onclick='processarUploads()'>Salvar e Gerar Códigos</button>`;
+        }
+    }
+
+    function listarCodigosNoGerador() {
+        let lista = JSON.parse(localStorage.getItem('codigos_gerados') || '[]');
+        let html = "<table><tr><th>Código</th><th>Arquivo</th><th>Pasta</th></tr>";
+        lista.forEach(item => {
+            html += `<tr><td>${item.codigo}</td><td>${item.arquivo}</td><td>${item.pasta}</td></tr>`;
+        });
+        document.getElementById('lista_codigos').innerHTML = html + "</table>";
+    }
+</script>
+</body>
+</html>
