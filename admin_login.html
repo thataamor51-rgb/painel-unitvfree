@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Administrativo</title>
+    <style>
+        body { 
+            margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+            /* Fundo com degradê roxo, azul e rosa */
+            background: linear-gradient(135deg, #4b0082, #0000ff, #ff007f); 
+            font-family: sans-serif;
+        }
+        .login-card { 
+            background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 350px; text-align: center; position: relative;
+        }
+        .back-btn { position: absolute; top: 15px; left: 15px; text-decoration: none; color: #ff007f; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-entrar { 
+            width: 100%; padding: 12px; background: #ff007f; color: white; border: none; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <a href="index.html" class="back-btn">← Voltar</a>
+    <h2>Login Administrativo</h2>
+    <input type="text" id="user" placeholder="Usuário">
+    <input type="password" id="pass" placeholder="Senha">
+    <div style="text-align: left; font-size: 14px; margin-bottom: 10px;">
+        <input type="checkbox" id="remember" style="width: auto;"> Salvar login
+    </div>
+    <button class="btn-entrar" onclick="fazerLogin()">Entrar</button>
+</div>
+
+<script>
+    window.onload = () => {
+        if(localStorage.getItem('user')) document.getElementById('user').value = localStorage.getItem('user');
+    };
+
+    function fazerLogin() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    const listaAdmins = JSON.parse(localStorage.getItem('lista_admins') || '[]');
+
+    // Verifica se o usuário existe
+    const admin = listaAdmins.find(u => u.usuario === user && u.senha === pass);
+
+    if (admin) {
+        localStorage.setItem('usuario_logado', user);
+        // Tente usar o caminho completo ou apenas o nome do arquivo que funciona
+        window.location.href = "painel-admin.html"; 
+    } else {
+        alert("Usuário ou senha incorretos!");
+    }
+}
+</script>
+
+</body>
+</html>
