@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0a0a0a; color: white; font-family: sans-serif; }
+        .sidebar { background: linear-gradient(180deg, #1f0505 0%, #0a0a0a 100%); border-right: 1px solid #333; }
+        .card-user { background: linear-gradient(90deg, #4a0c0c 0%, #2a0707 100%); }
+        .nav-active { background: rgba(255, 255, 255, 0.1); border-left: 4px solid #ef4444; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN -->
+    <div id="telaLogin" class="flex items-center justify-center h-screen bg-[#0a0a0a]">
+        <div class="bg-slate-900 p-8 rounded-2xl w-80 text-center border border-slate-700">
+            <h2 class="text-xl font-bold mb-6 text-white">Login Revendedor</h2>
+            <input id="u" class="w-full p-3 mb-3 bg-black rounded border border-slate-600 text-white" placeholder="Usuário">
+            <input id="p" type="password" class="w-full p-3 mb-3 bg-black rounded border border-slate-600 text-white" placeholder="Senha">
+            
+            <!-- CAPTCHA -->
+            <div class="mb-6 p-3 bg-black/50 rounded-lg flex items-center gap-3">
+                <input type="checkbox" id="captcha" class="w-5 h-5 accent-red-600">
+                <label class="text-sm">Não sou um robô</label>
+            </div>
+
+            <button onclick="verificarLogin()" class="w-full bg-red-600 p-3 rounded font-bold hover:bg-red-700">Acessar Painel</button>
+        </div>
+    </div>
+
+    <!-- PAINEL (Inicialmente oculto) -->
+    <div id="conteudoPainel" class="hidden flex h-screen">
+        <div class="sidebar w-72 p-6 flex flex-col">
+            <h1 class="text-2xl font-bold mb-10 text-red-500">Unitvfree</h1>
+            <div class="card-user p-4 rounded-xl mb-8 flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">👤</div>
+                <div><p class="font-bold" id="userDisplay">revendedor</p><p class="text-xs text-gray-300">Revendedor</p></div>
+            </div>
+            <nav class="space-y-4 flex-1">
+                <button onclick="mudarConteudo('Dashboard', this)" class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3">📊 Dashboard</button>
+                <button onclick="mudarConteudo('Códigos', this)" class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3">🔑 Códigos</button>
+                <button onclick="mudarConteudo('Mensagens', this)" class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3">✉️ Mensagens Urgentes</button>
+                <button onclick="mudarConteudo('Vencimento', this)" class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3">📅 Vencimento do Plano</button>
+            </nav>
+            <button onclick="location.reload()" class="text-red-500 mt-auto flex items-center gap-2">← Sair</button>
+        </div>
+
+        <div id="content" class="flex-1 p-10">
+            <h1 id="tituloPagina" class="text-3xl font-bold">Dashboard</h1>
+            <p id="textoPagina" class="mt-4 text-gray-400">Gerencie suas atividades aqui.</p>
+        </div>
+    </div>
+
+    <script>
+        function verificarLogin() {
+            const u = document.getElementById('u').value.trim();
+            const p = document.getElementById('p').value.trim();
+            const c = document.getElementById('captcha').checked;
+
+            if(!c) { alert("Marque o Captcha!"); return; }
+
+            const revendedores = JSON.parse(localStorage.getItem('banco_revendas') || '[]');
+            const r = revendedores.find(x => x.usuario === u && x.senha === p);
+
+            if (r) {
+                document.getElementById('telaLogin').classList.add('hidden');
+                document.getElementById('conteudoPainel').classList.remove('hidden');
+                document.getElementById('userDisplay').innerText = u;
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+
+        function mudarConteudo(opcao, btn) {
+            document.getElementById('tituloPagina').innerText = opcao;
+            document.getElementById('textoPagina').innerText = "Conteúdo da área de " + opcao;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            btn.classList.add('nav-active');
+        }
+    </script>
+</body>
+</html>
